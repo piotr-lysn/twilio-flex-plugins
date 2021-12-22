@@ -2,10 +2,24 @@ import React from 'react';
 import { VERSION } from '@twilio/flex-ui';
 import { FlexPlugin } from 'flex-plugin';
 
-import CustomTaskListContainer from './components/CustomTaskList/CustomTaskList.Container';
 import reducers, { namespace } from './states';
 
 const PLUGIN_NAME = 'FlexWebchatInfoPanelPlugin';
+
+function ContextInfoPanelSection(props) {
+    const { task } = props;
+    return (
+      <>
+        <hr />
+        <h1>Client info</h1>
+        {Object.entries(task._task.attributes).map(([key, value]) => (
+          <div key={key}>
+            {key}: {value}
+          </div>
+        ))}
+      </>
+    );
+}
 
 export default class FlexWebchatInfoPanelPlugin extends FlexPlugin {
   constructor() {
@@ -21,9 +35,9 @@ export default class FlexWebchatInfoPanelPlugin extends FlexPlugin {
    */
   async init(flex, manager) {
     this.registerReducers(manager);
-
-    const options = { sortOrder: -1 };
-    flex.AgentDesktopView.Panel1.Content.add(<CustomTaskListContainer key="FlexWebchatInfoPanelPlugin-component" />, options);
+    flex.TaskInfoPanel.Content.add(
+      <ContextInfoPanelSection key="FlexWebchatInfoPanelPlugin-ContextInfoPanelSection" />
+    );
   }
 
   /**
