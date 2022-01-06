@@ -3,20 +3,39 @@ import { VERSION } from '@twilio/flex-ui';
 import { FlexPlugin } from 'flex-plugin';
 
 import reducers, { namespace } from './states';
+import get from 'lodash.get';
 
 const PLUGIN_NAME = 'FlexWebchatInfoPanelPlugin';
 
 function ContextInfoPanelSection(props) {
     const { task } = props;
+    const name = get(task, '_task.attributes.name');
+    const mobileNumber = get(task, '_task.attributes.mobile_number');
+    const email = get(task, '_task.attributes.email');
+    const userId = get(task, '_task.attributes.user_id');
+    const type = get(task, '_task.attributes.type');
+    const profileLink = get(task, '_task.attributes.profile_link');
+    const allowedToSendSms = get(task, '_task.attributes.allowed_to_send_sms');
+
     return (
       <>
         <hr />
         <h1>Client info</h1>
-        {Object.entries(task._task.attributes).map(([key, value]) => (
-          <div key={key}>
-            {key}: {value}
-          </div>
-        ))}
+          <div>Name: {name}</div>
+          <div>Email: {email}</div>
+          <div>User type: {type}</div>
+          {mobileNumber && (
+            <div>Mobile: {mobileNumber}</div>
+          )}
+          {userId && (
+            <div>User id: {userId}</div>
+          )}
+          {profileLink && (
+            <div>Profile link: {profileLink}</div>
+          )}
+          {allowedToSendSms && (
+          <div>Allowed to send SMS: {allowedToSendSms}</div>
+          )}
       </>
     );
 }
